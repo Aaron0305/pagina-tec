@@ -1,0 +1,165 @@
+/* General Styles */
+body {
+    font-family: 'Georgia', serif; /* Define la fuente de todo el texto */
+    margin: 0; /* Elimina el margen por defecto */
+    padding: 0; /* Elimina el padding por defecto */
+    background-color: #ffffff; /* Fondo claro */
+    color: #333; /* Color del texto */
+}
+
+/* Header Styles */
+header {
+    background-color: white;
+    padding: 20px 0;
+    position: relative; /* Necesario para posicionar los elementos */
+    border-bottom: 5px solid #0A1164; /* Línea decorativa roja debajo del header */
+}
+
+.logo-header {
+    display: flex;
+    justify-content: space-between; /* Alinear logos a izquierda y derecha */
+    align-items: center;
+    padding: 0 30px; /* Espaciado interno horizontal */
+}
+
+.logo-header img {
+    height: 60px; /* Tamaño ajustado de los logos */
+}
+.logo-left {
+    height: 80px; /* Cambia este valor para ajustar el tamaño */
+}
+.logo-right {
+    height: 80px; /* Cambia este valor para ajustar el tamaño */
+}
+.logo-left {
+    position: absolute;
+    left: 150px; /* Cambia este valor para moverlo horizontalmente */
+    top: 20px;  /* Cambia este valor para moverlo verticalmente */
+}
+.logo-right {
+    position: absolute;
+    right: 60px; /* Cambia este valor para moverlo horizontalmente */
+    top: 20px;   /* Cambia este valor para moverlo verticalmente */
+}
+
+.title-header {
+    text-align: center; /* Centra el texto horizontalmente */
+    color: #0A1164; /* Color del texto */
+    font-size: 2.0em; /* Tamaño del texto, cambia este valor para ajustar */
+    font-weight: bold; /* Hace que el texto sea negrita */
+    margin: -5px 0; /* Controla el espaciado superior e inferior */
+}
+/* Estilo del enlace de administración */
+.admin {
+    color: #0A1164; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1.2em; /* Tamaño del texto */
+    font-weight: bold; /* Texto en negritas */
+    top: 130px;
+    right: 30px;
+    position: absolute;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Efecto suave */
+
+}
+
+
+/* Sección de Campus */
+.educational-options {
+    display: flex; /* Usa Flexbox para organizar las opciones */
+    justify-content: center; /* Centra las opciones horizontalmente */
+    gap: 40px; /* Espacio entre las opciones */
+    flex-wrap: wrap; /* Permite que se ajusten si la pantalla es pequeña */
+    padding: 40px 20px; /* Añade espacio alrededor */
+}
+
+/* Estilo para cada opción de campus */
+.option {
+    background-color: #a5c2ed; /* Fondo claro para cada opción */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    width: 300px; /* Ancho fijo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    text-align: center; /* Centra el texto dentro de cada opción */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Efectos de transición */
+}
+
+/* Efecto al pasar el mouse sobre las opciones */
+.option:hover {
+    transform: translateY(-5px); /* Eleva ligeramente la opción */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}
+
+/* Estilo para la imagen de cada campus */
+.campus-img {
+    width: 100%; /* Hace que la imagen ocupe todo el ancho */
+    border-radius: 10px; /* Bordes redondeados para la imagen */
+    margin-bottom: 15px; /* Espacio debajo de la imagen */
+}
+
+/* Título de cada opción */
+.option h2 {
+    color: #000000; /* Título en color rojo oscuro */
+    font-size: 1.5em; /* Tamaño de la fuente */
+    margin-bottom: 10px; /* Margen debajo del título */
+}
+
+/* Texto de cada opción */
+.option p {
+    font-size: 1em; /* Tamaño de la fuente */
+    line-height: 1.5; /* Espaciado entre líneas */
+    color: #000000; /* Color gris para el texto */
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;/* Fondo rojo oscuro para el pie de página */
+    background-color: #0c0066;/* Color del texto blanco */
+    color: white;/* Centra el texto en el pie de página */
+    padding: 16px 0;/* Añade espaciado arriba y abajo */
+    font-size: 0.9em;/* Tamaño de la fuente pequeño */
+    margin-top: 70px;
+}
+/* Botón de acción */
+.btn-campus {
+    display: inline-block; /* Hace que el botón sea un bloque en línea */
+    background-color: #800000; /* Fondo rojo para el botón */
+    color: white; /* Texto en blanco */
+    text-decoration: none; /* Elimina el subrayado */
+    padding: 10px 20px; /* Espaciado interno */
+    border-radius: 25px; /* Bordes redondeados */
+    font-size: 1em; /* Tamaño de la fuente */
+    font-weight: bold; /* Texto en negritas */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: all 0.3s ease; /* Transición suave para efectos */
+}
+
+/* Efectos al pasar el mouse sobre el botón */
+.btn-campus:hover {
+    background-color: #b22222; /* Fondo más oscuro al pasar el cursor */
+    transform: translateY(-2px); /* Efecto de elevación */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Sombra en el texto */
+}
+/* Estilo para el cuadro de Administración */
+.admin-box {
+   
+    padding: 10px 15px; /* Espaciado interno */
+    max-width: 150px; /* Ancho máximo del cuadro */
+    text-align: center; /* Centra el texto */
+    font-size: 0.9em; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    color: #000000; /* Texto blanco */
+    background-color: #ffffff; /* Fondo rojo oscuro */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor a mano */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-box:hover {
+    transform: translateY(-3px); /* Efecto de elevación */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+    background-color: #a5c2ed; /* Color más oscuro al pasar el mouse */
+}
+

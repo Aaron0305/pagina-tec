@@ -1,0 +1,305 @@
+/* Estilo general del cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Fondo gris claro */
+    color: #333; /* Texto base oscuro */
+}
+/* Imagen del encabezado */
+header img {
+    width: 100%; /* Mantener el ancho completo del contenedor */
+    max-height: 80px; /* Reducir la altura máxima */
+    object-fit: fill; /* Ajustar la imagen sin distorsionarla */
+    margin-bottom: 10px; /* Espacio debajo de la imagen */
+}
+
+/* Estilo del encabezado 
+header {
+    width: 100; /* Mantener el ancho completo del contenedor 
+    height: auto; /* Ajustar la altura automáticamente 
+    max-height: 200px; /* Limitar la altura máxima de la imagen 
+}
+*/
+
+/* Contenedor principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh; /* Ajuste de altura para centrar */
+}
+
+/* Centrar el cuadro de Modalidad de Examen */
+.option {
+    width: 50%;
+    max-width: 400px;
+    background-color: #ffffff;
+    border: 2px solid #0A1164;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    padding: 20px;
+    margin: auto; /* Centrar horizontalmente */
+    position: relative;
+    top: 50%;
+    transform: translateY(2%);
+}
+
+
+.option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen y contenido dentro de los cuadros */
+.option-img {
+    width: 100%;
+    max-height: 120px; /* Reducir altura máxima */
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.option-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.option-content h2 {
+    color: #0A1164;
+    font-size: 1.4em;
+    margin-bottom: 10px;
+}
+
+.option-content p {
+    color: #555;
+    font-size: 0.9em; /* Reducir tamaño del texto */
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+/* Botón interactivo */
+.btn {
+    display: inline-block;
+    background-color: #0A1164;
+    color: #ffffff;
+    padding: 5px 10px; /* Reducir padding */
+    font-size: 0.8em; /* Reducir tamaño del texto */
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0A1164;
+}
+
+/* Cuadro adicional con información */
+.info-box {
+    background-color: #ffffff;
+    border: 2px solid #0A1164;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin: 40px auto;
+    max-width: 800px;
+}
+
+.info-box h2 {
+    color: #0A1164;
+    font-size: 1.3em;
+    margin-bottom: 10px;
+}
+
+.info-box ul {
+    list-style: none; /* Eliminar viñetas */
+    padding: 0;
+}
+
+.info-box li {
+    margin-bottom: 40px;
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+.info-box li a {
+    color: #0A1164;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.info-box li a:hover {
+    color: #0A1164; /* Color más oscuro al pasar el cursor */
+}
+
+/* Estilo del pie de página */
+footer {
+    background-color: #0A1164; /* Fondo granate */
+    color: #ffffff; /* Texto blanco */
+    text-align: center; /* Centrar texto */
+    padding: 15px 0; /* Espaciado interno */
+    font-size: 0.9em; /* Tamaño del texto */
+    margin-top: 40px;
+}
+
+
+.pdf-viewer {
+    margin: 20px auto;
+    border: 2px solid #0A1164; /* Borde granate */
+    border-radius: 10px;
+    overflow: hidden; /* Evitar que el contenido sobresalga */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra para profundidad */
+    max-width: 1000px; /* Limitar el ancho del visor */
+}
+/* Estilo general del modal (oculto por defecto) */
+
+
+.modal {
+    display: none; /* Ocultar modal inicialmente */
+    position: fixed; /* Fijar posición */
+    z-index: 1000; /* Asegurar que esté encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%; /* Cubrir todo el ancho */
+    height: 100%; /* Cubrir todo el alto */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    justify-content: center; /* Centrar contenido horizontalmente */
+    align-items: center; /* Centrar contenido verticalmente */
+}
+
+
+/* Contenido del modal */
+.modal-content {
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* Sombra */
+    width: 80%; /* Ancho del modal */
+    max-width: 900px; /* Ancho máximo */
+    position: relative; /* Posicionamiento relativo para la "X" */
+}
+
+/* Botón de cierre (la "X") */
+.close {
+    position: absolute;
+    top: -10px; /* Más cerca de la esquina */
+    right: -10px; /* Más lejos del contenido */
+    font-size: 28px; /* Tamaño un poco más grande */
+    font-weight: bold;
+    color: #0A1164; /* Color granate */
+    background: #ffffff; /* Fondo blanco para destacarla */
+    border: 2px solid #0A1164; /* Borde granate */
+    border-radius: 50%; /* Forma circular */
+    width: 40px; /* Ancho fijo */
+    height: 40px; /* Altura fija */
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Animación suave */
+}
+
+.close:hover {
+    background-color: #0A1164; /* Fondo granate al pasar el cursor */
+    color: #ffffff; /* Texto blanco al pasar el cursor */
+    transform: scale(1.1); /* Ligeramente más grande */
+}
+
+
+/* Botón de cierre */
+.close {
+    position: absolute;
+    top: -10px; /* Más cerca de la esquina superior */
+    right: -10px; /* Más cerca de la esquina derecha */
+    font-size: 28px; /* Tamaño de texto más pequeño */
+    font-weight: bold;
+    color: #0A1164; /* Color azul */
+    border: 2px solid #0A1164; /* Borde azul */
+    border-radius: 50%; /* Forma circular */
+    width: 40px; /* Ancho fijo más pequeño */
+    height: 40px; /* Altura fija más pequeña */
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Animación suave */
+}
+
+/* Efecto al pasar el cursor por la "X" */
+.close:hover {
+    background-color: #0A1164; /* Fondo azul */
+    color: #ffffff; /* Texto blanco */
+    transform: scale(1.1); /* Ligeramente más grande */
+}
+
+
+/* Título del modal */
+.modal-content h2 {
+    color: #0A1164;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Texto del modal */
+.modal-content p {
+    color: #555;
+    font-size: 1.2em;
+    line-height: 1.6;
+    text-align: justify; /* Justificar texto */
+}
+/* Listas dentro del modal */
+.modal-content ul {
+    list-style-type: disc; /* Viñetas circulares */
+    margin: 20px 0 0 20px; /* Espaciado superior e indentación izquierda */
+    padding: 0;
+    color: #555; /* Color gris oscuro */
+    font-size: 1.1em; /* Tamaño del texto */
+    line-height: 1.6; /* Espaciado entre líneas */
+}
+
+.modal-content ul li {
+    margin-bottom: 10px; /* Espaciado entre elementos de la lista */
+}
+
+
+
+
+/* Contenedor de los botones */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Botones de información */
+.info-button {
+    background: linear-gradient(to right, #ffffff, #ffffff);
+    color: #0A1164;
+    border: 2px solid #0A1164;
+    border-radius: 30px;
+    padding: 5px 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Efectos al pasar el cursor */
+.info-button:hover {
+    background: #d7d2ff;
+    transform: scale(1.0);
+}
+footer {
+    background-color: #0A1164;
+    color: #ffffff;
+    text-align: center;
+    padding: 5px 0 ;
+    font-size: 0.9em;
+}

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingeniería Industrial</title>
+    <link rel="stylesheet" href="../css/stylecarreras.css"> <!-- Ruta relativa al CSS principal -->
+</head>
+<body>
+    <header>
+        <img src="../imagenes/Industrial_.jpeg" alt="Ingeniería Industrial" style="width: 100%; height: auto;">
+    </header>
+    <main>
+        
+        <section class="options">
+            <div class="row">
+            <!-- Opción: Modalidad por examen de ingreso -->
+            <div class="option">
+                <img src="../imagenes/examen.jpeg" alt="Examen de Ingreso" class="option-img">
+                <div class="option-content">
+                <h2>Modalidad por Examen de Ingreso</h2>
+                <p>Presenta un examen de ingreso para ser parte de la comunidad TESJo.</p>
+                <a href="../impl/proc_examen.html" class="btn" onclick="guardarValor('opcion3')">Ingresar</a> <!-- Enlace al detalle del examen -->
+            </div>
+            </div>
+
+            <!-- Opción: Modalidad Pase Directo por Promedio -->
+            <div class="option">
+                <div class="option-content">
+                <img src="../imagenes/pasedirecto.png" alt="Pase Directo" class="option-img">
+                <h2>Modalidad Pase Directo por Promedio</h2>
+                <p>Accede directamente por tu promedio de bachillerato (9.0).</p>
+                <a href="../impl/proc_prom.html" class="btn" onclick="guardarValor('opcion4')">Ingresar</a> <!-- Enlace al detalle del pase directo -->
+            </div>
+        </div>
+    </div>
+
+<!-- Cuadro para información adicional -->
+<div class="info-box">
+    <h2>Información de la Carrera</h2>
+    <div class="button-group">
+        <!-- Botón para Objetivo General -->
+        <button class="info-button" onclick="openObjectiveModal()">Objetivo General</button>
+        <!-- Botón para Perfil de Ingreso -->
+        <button class="info-button" onclick="openIngresoModal()">Perfil de Ingreso</button>
+        <!-- Botón para Perfil de Egreso -->
+        <button class="info-button" onclick="openEgresoModal()">Perfil de Egreso</button>
+        <!-- Botón para Ámbito Laboral -->
+        <button class="info-button" onclick="openAmbitoModal()">Ámbito Laboral</button>
+        <!-- Botón para Retícula -->
+        <button class="info-button" onclick="openModal()">Retícula</button>
+    </div>
+</div>
+
+
+    
+
+<!-- Ventana Modal para Objetivo General -->
+<div id="modal-objective" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeObjectiveModal()">&times;</span>
+        <h2>Objetivo General</h2>
+        <p>
+            Formar profesionales, éticos, líderes, creativos y emprendedores en el área de Ingeniería Industrial; competente para diseñar, implantar, administrar, innovar y optimizar sistemas de producción de bienes y servicios; con enfoque sistémico y sustentable en un entorno global. 
+        </p>
+    </div>
+</div>
+
+            
+
+<!-- Ventana Modal para Perfil de Ingreso -->
+<div id="modal-ingreso" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeIngresoModal()">&times;</span>
+        <h2>Perfil de Ingreso</h2>
+        <ul>
+           <li> 1. Habilidades matemáticas y analíticas.</li>
+           <li> 2. Competencias comunicativas del español: estructura de la lengua y comprensión lectora..</li>
+           <li> 3. Conocimientos de matemáticas y física.</li>
+           <li> 4. Comunicación escrita del español.</li>
+           <li> 5. Conocimiento del idioma inglés.</li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<!-- Ventana Modal para Perfil de egreso -->
+<div id="modal-egreso" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEgresoModal()">&times;</span>
+        <h2>Perfil de Egreso</h2>
+        <ul>
+            <li>1. Diseña, mejora e integra sistemas productivos de bienes y servicios aplicando tecnologías para su optimización. </li> 
+            <li>2. Diseña, implementa y mejora sistemas de trabajo para elevar la productividad. </li> 
+            <li>3. Implanta sistemas de calidad utilizando métodos estadísticos para mejorar la competitividad de las organizaciones.  </li>
+            <li>4. Administra sistemas de mantenimiento en procesos de bienes y servicios para la optimización en el uso de los recursos. . </li>
+            <li>5. Gestiona sistemas de seguridad, salud ocupacional de manera sustentable, en sistemas productivos de bienes y servicios atendiendo los lineamientos legales.</li> 
+            <li>6. Formula, evalúa y gestiona proyectos de inversión, sociales y de transferencia de tecnología para el desarrollo regional. </li> 
+        </ul>
+    </div>
+</div>
+
+
+   
+
+<!-- Ventana Modal para Ambito laboral -->
+<div id="modal-ambito" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAmbitoModal()">&times;</span>
+        <h2>Ambito Laboral</h2>
+        <ul>
+            <li>1. El Ingeniero Industrial es un profesional que se desarrolla principalmente en el sector manufacturero para la optimización de los procesos de transformación; y en el sector servicio al diseñar sistemas administrativos y de operación, así como el control de proyectos.</li>
+            <li>2.  Brinda asesoría, diseño, control y operación de bienes y servicios dentro del sector público y privado.</li>
+            <li>3. Trabaja en la investigación, en el desarrollo tecnológico y la docencia</li>
+        </ul>
+    </div>
+</div>
+
+
+<div id="modal-pdf" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <embed src="../reticulas/reticula industrial.pdf" type="application/pdf" width="100%" height="550px">
+    </div>
+</div>
+
+
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Tecnológico de Estudios Superiores de Jocotitlán</p>
+    </footer>
+
+    <script>
+        // Función para abrir el modal de  reitucula
+        function openModal() {
+            document.getElementById('modal-pdf').style.display = 'flex';
+        }
+    
+        // Función para cerrar el modal de reticula
+        function closeModal() {
+            document.getElementById('modal-pdf').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-pdf');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+
+
+    <script>
+        // Abrir el modal del Objetivo General
+        function openObjectiveModal() {
+            document.getElementById('modal-objective').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Objetivo General
+        function closeObjectiveModal() {
+            document.getElementById('modal-objective').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-objective');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    
+
+    <script>
+        // Abrir el modal del Perfil de Ingreso
+        function openIngresoModal() {
+            document.getElementById('modal-ingreso').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Perfil de Ingreso
+        function closeIngresoModal() {
+            document.getElementById('modal-ingreso').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const ingresoModal = document.getElementById('modal-ingreso');
+            if (event.target === ingresoModal) {
+                ingresoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+
+    <script>
+        // Abrir el modal del Perfil de Egreso
+        function openEgresoModal() {
+            document.getElementById('modal-egreso').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Perfil de Egreso
+        function closeEgresoModal() {
+            document.getElementById('modal-egreso').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const egresoModal = document.getElementById('modal-egreso');
+            if (event.target === egresoModal) {
+                egresoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+
+    <script>
+        // Abrir el modal de Ambito Laboral
+        function openAmbitoModal() {
+            document.getElementById('modal-ambito').style.display = 'flex';
+        }
+    
+        // Cerrar el modal de Ambito Laboral
+        function closeAmbitoModal() {
+            document.getElementById('modal-ambito').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const ambitoModal = document.getElementById('modal-egreso');
+            if (event.target === ambitoModal) {
+                ambitoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+    <script>
+                function guardarValor(valor) {
+                  // Guardar el valor en localStorage
+                  localStorage.setItem("miVariable", valor);
+                  //alert(`Valor "${valor}" guardado correctamente.`);
+                }
+    </script>
+    
+</body>
+</html>

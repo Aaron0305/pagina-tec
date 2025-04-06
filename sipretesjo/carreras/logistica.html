@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingeniería en Logística</title>
+    <link rel="stylesheet" href="../css/stylecarreras.css"> <!-- Ruta relativa al CSS principal -->
+</head>
+<body>
+    <header>
+        <img src="../imagenes/Logistica_-01.jpeg" alt="Ingeniería en Logistica" style="width: 100%; height: auto;">
+    </header>
+    <main>
+        
+        <section class="options">
+            <div class="row">
+            <!-- Opción: Modalidad por examen de ingreso -->
+            <div class="option">
+                <img src="../imagenes/examen.jpeg" alt="Examen de Ingreso" class="option-img">
+                <div class="option-content">
+                <h2>Modalidad por Examen de Ingreso</h2>
+                <p>Presenta un examen de ingreso para ser parte de la comunidad TESJo.</p>
+                <a href="../impl/proc_examen.html" class="btn" onclick="guardarValor('opcion1')">Ingresar</a> <!-- Enlace al detalle del examen -->
+            </div>
+            </div>
+
+            <!-- Opción: Modalidad Pase Directo por Promedio -->
+            <div class="option">
+                <div class="option-content">
+                <img src="../imagenes/pasedirecto.png" alt="Pase Directo" class="option-img">
+                <h2>Modalidad Pase Directo por Promedio</h2>
+                <p>Accede directamente por tu promedio de bachillerato (9.0).</p>
+                <a href="../impl/proc_prom.html" class="btn" onclick="guardarValor('opcion2')">Ingresar</a> <!-- Enlace al detalle del pase directo -->
+            </div>
+        </div>
+    </div>
+
+<!-- Cuadro para información adicional -->
+<div class="info-box">
+    <h2>Información de la Carrera</h2>
+    <div class="button-group">
+        <!-- Botón para Objetivo General -->
+        <button class="info-button" onclick="openObjectiveModal()">Objetivo General</button>
+        <!-- Botón para Perfil de Ingreso -->
+        <button class="info-button" onclick="openIngresoModal()">Perfil de Ingreso</button>
+        <!-- Botón para Perfil de Egreso -->
+        <button class="info-button" onclick="openEgresoModal()">Perfil de Egreso</button>
+        <!-- Botón para Ámbito Laboral -->
+        <button class="info-button" onclick="openAmbitoModal()">Ámbito Laboral</button>
+        <!-- Botón para Retícula -->
+        <button class="info-button" onclick="openModal()">Retícula</button>
+    </div>
+</div>
+
+    
+
+<!-- Ventana Modal para Objetivo General -->
+<div id="modal-objective" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeObjectiveModal()">&times;</span>
+        <h2>Objetivo General</h2>
+        <p>
+            Formar profesionistas en el área de Ingeniería en Logística, que diseñe y gestione los flujos de información, productos, recursos y materiales en la cadena de suministro de manera competitiva y sostenible. 
+        </p>
+    </div>
+</div>
+
+           
+
+<!-- Ventana Modal para Perfil de Ingreso -->
+<div id="modal-ingreso" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeIngresoModal()">&times;</span>
+        <h2>Perfil de Ingreso</h2>
+        <ul>
+           <li> 1. Habilidad para analizar y resolver problemas con base en principios elementales de cálculo y matemáticas.</li>
+           <li> 2. Capacidad de análisis y síntesis.</li>
+           <li> 3. Habilidad para el manejo de habilidades informáticas y computacionales.</li>
+           <li> 4. Capacidad de comunicación oral y escrita.</li>
+           <li> 5. Conocimiento del idioma inglés.</li>
+        </ul>
+    </div>
+</div>
+
+
+
+       
+
+<!-- Ventana Modal para Perfil de egreso -->
+<div id="modal-egreso" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEgresoModal()">&times;</span>
+        <h2>Perfil de Egreso</h2>
+        <ul>
+            <li>1. Diseña, implementa e innova sistemas de abastecimiento y distribución de bienes y servicios para la satisfacción de la sociedad de forma sostenible.</li>
+            <li>2. Dirige las actividades logísticas de transporte, seguridad interna y externa de bienes y servicios para alcanzar los objetivos de la organización en forma eficaz y eficiente.</li>
+            <li>3. Administra el flujo de materiales en las organizaciones para mejorar los sistemas de abastecimiento y distribución a fin de cumplir con los requerimientos del cliente. </li>
+            <li>4. Usa el software de modelado en sistemas logísticos para su diseño, operación y control reduciendo costos y tiempos de respuesta.</li>
+            <li>5. Diseña y evalúa estrategias logísticas de operación en redes internas y externas para contribuir con la estrategia global de la organización considerando criterios de calidad y costos.</li>
+            <li>6. Administra los procesos de la cadena de suministro en el sistema de producción para mejorar el servicio al cliente en un contexto colaborativo.</li>
+            <li>7. Realiza la planeación estratégica del flujo de información, productos y materiales en el desarrollo de procesos logísticos para la competitividad en un entorno globalizado.</li>
+            <li>8. Organiza y dirige grupos interdisciplinarios en las organizaciones, para la solución de problemas en la cadena de suministros de manera sinérgica.</li>
+            <li>9. Desarrolla proyectos de investigación para optimizar la cadena de suministros bajo enfoques innovadores.</li>
+            <li>10. Gestiona alianzas estratégicas con proveedores-clientes-competidores para operar en los mercados globales de manera exitosa.</li>
+            <li>11. Realiza procesos de importación y exportación de productos y servicios para satisfacer las necesidades del cliente cumpliendo con la normatividad vigente.</li>
+            <li>12. Diseña y selecciona envases y embalajes para el manejo, distribución y confinamiento de materiales y productos, bajo las normas aplicables.</li>
+            <li>13. Utiliza tecnologías de información y comunicación, para el desarrollo de las operaciones de los procesos logísticos para su cumplimiento en tiempo y forma.</li>
+            <li>14. Desarrolla y analiza indicadores de desempeño logístico para fortalecer la competitividad de la cadena de suministro en el entorno internacional.</li>
+        </ul>
+    </div>
+</div>
+
+
+        
+
+<!-- Ventana Modal para Ambito laboral -->
+<div id="modal-ambito" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAmbitoModal()">&times;</span>
+        <h2>Ambito Laboral</h2>
+        <p>
+            El ingeniero en Logística puede desempeñarse en: instituciones de gobierno, empresas de autotransporte de carga y pasaje, empresas ferroviarias, líneas aéreas, aeropuertos y puertos marítimos, empresas de mensajería y paquetería, industria manufacturera, automotríz y aeronáutica, departamentos de logística, tráfico y distribuación, terminales de carga y plataformas logísticas.
+        </p>
+    </div>
+</div>
+
+
+<div id="modal-pdf" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <embed src="../reticulas/Retícula Ingeniería en Logistica.pdf" type="application/pdf" width="100%" height="550px">
+    </div>
+</div>
+
+
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Tecnológico de Estudios Superiores de Jocotitlán</p>
+    </footer>
+
+    <script>
+        // Función para abrir el modal de  reitucula
+        function openModal() {
+            document.getElementById('modal-pdf').style.display = 'flex';
+        }
+    
+        // Función para cerrar el modal de reticula
+        function closeModal() {
+            document.getElementById('modal-pdf').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-pdf');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+
+
+    <script>
+        // Abrir el modal del Objetivo General
+        function openObjectiveModal() {
+            document.getElementById('modal-objective').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Objetivo General
+        function closeObjectiveModal() {
+            document.getElementById('modal-objective').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-objective');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    
+
+    <script>
+        // Abrir el modal del Perfil de Ingreso
+        function openIngresoModal() {
+            document.getElementById('modal-ingreso').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Perfil de Ingreso
+        function closeIngresoModal() {
+            document.getElementById('modal-ingreso').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const ingresoModal = document.getElementById('modal-ingreso');
+            if (event.target === ingresoModal) {
+                ingresoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+
+    <script>
+        // Abrir el modal del Perfil de Egreso
+        function openEgresoModal() {
+            document.getElementById('modal-egreso').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Perfil de Egreso
+        function closeEgresoModal() {
+            document.getElementById('modal-egreso').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const egresoModal = document.getElementById('modal-egreso');
+            if (event.target === egresoModal) {
+                egresoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+
+    <script>
+        // Abrir el modal de Ambito Laboral
+        function openAmbitoModal() {
+            document.getElementById('modal-ambito').style.display = 'flex';
+        }
+    
+        // Cerrar el modal de Ambito Laboral
+        function closeAmbitoModal() {
+            document.getElementById('modal-ambito').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const ambitoModal = document.getElementById('modal-egreso');
+            if (event.target === ambitoModal) {
+                ambitoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+    <script>
+                function guardarValor(valor) {
+                  // Guardar el valor en localStorage
+                  localStorage.setItem("miVariable", valor);
+                  //alert(`Valor "${valor}" guardado correctamente.`);
+                }
+    </script>
+    
+</body>
+</html>
+

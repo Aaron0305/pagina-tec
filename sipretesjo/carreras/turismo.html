@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licenciatura en Turismo</title>
+    <link rel="stylesheet" href="../css/stylecarreras.css"> <!-- Ruta relativa al CSS principal -->
+</head>
+<body>
+    <header>
+        <img src="../imagenes/turismo_.jpeg" alt="Licenciatura en Turismo" style="width: 100%; height: auto;">
+    </header>
+    <main>
+        
+        <section class="options">
+            <div class="row">
+            <!-- Opción: Modalidad por examen de ingreso -->
+            <div class="option">
+                <img src="../imagenes/examen.jpeg" alt="Examen de Ingreso" class="option-img">
+                <div class="option-content">
+                <h2>Modalidad por Examen de Ingreso</h2>
+                <p>Presenta un examen de ingreso para ser parte de la comunidad TESJo.</p>
+                <a href="../impl/proc_examen.html" class="btn" onclick="guardarValor('opcion1')">Ingresar</a> <!-- Enlace al detalle del examen -->
+            </div>
+            </div>
+
+            <!-- Opción: Modalidad Pase Directo por Promedio -->
+            <div class="option">
+                <div class="option-content">
+                <img src="../imagenes/pasedirecto.png" alt="Pase Directo" class="option-img">
+                <h2>Modalidad Pase Directo por Promedio</h2>
+                <p>Accede directamente por tu promedio de bachillerato (9.0).</p>
+                <a href="../impl/proc_prom.html" class="btn" onclick="guardarValor('opcion2')">Ingresar</a> <!-- Enlace al detalle del pase directo -->
+            </div>
+        </div>
+    </div>
+
+<!-- Cuadro para información adicional -->
+<div class="info-box">
+    <h2>Información de la Carrera</h2>
+    <div class="button-group">
+        <!-- Botón para Objetivo General -->
+        <button class="info-button" onclick="openObjectiveModal()">Objetivo General</button>
+        <!-- Botón para Perfil de Ingreso -->
+        <button class="info-button" onclick="openIngresoModal()">Perfil de Ingreso</button>
+        <!-- Botón para Perfil de Egreso -->
+        <button class="info-button" onclick="openEgresoModal()">Perfil de Egreso</button>
+        <!-- Botón para Ámbito Laboral -->
+        <button class="info-button" onclick="openAmbitoModal()">Ámbito Laboral</button>
+        <!-- Botón para Retícula -->
+        <button class="info-button" onclick="openModal()">Retícula</button>
+    </div>
+</div>
+
+
+    
+
+<!-- Ventana Modal para Objetivo General -->
+<div id="modal-objective" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeObjectiveModal()">&times;</span>
+        <h2>Objetivo General</h2>
+        <p>
+            Formar profesionales competitivos, capaces de diseñar, establecer, aplicar, controlar y evaluar sistemas de información financiera, administrativa y fiscal, dentro del marco legal vigente para la toma de decisiones de las entidades económicas nacionales e internacionales,
+            con una actitud ética, crítica, emprendedora y de liderazgo, a través de la investigación y el uso de la tecnología de la información y comunicaciones, fomentando el desarrollo sustentable. Formar profesionales en Turismo capaces de emprender, gestionar e innovar proyectos turísticos
+            sustentables donde la calidad será su característica principal, acordes con las necesidades y las tendencias globales que este sector demanda, con sentido ético y respeto a la integridad del patrimonio natural y cultural, para el desarrollo y crecimiento óptimo del turismo.
+        </p>
+    </div>
+</div>
+
+
+<!-- Ventana Modal para Perfil de Ingreso -->
+<div id="modal-ingreso" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeIngresoModal()">&times;</span>
+        <h2>Perfil de Ingreso</h2>
+        <ul>
+            <li>1. Habilidad para analizar y resolver problemas con base en principios elementales de cálculo y matemáticas.</li>
+            <li>2. Capacidad de análisis y síntesis.</li>
+            <li>3  Habilidad para el manejo de herramientas informáticas y computacionales.</li>
+            <li>4. Capacidad de comunicación oral y escrita.</li>
+            <li>5. Conocimiento del idioma inglés.</li>
+        </ul>
+    </div>
+</div>
+
+
+
+
+<!-- Ventana Modal para Perfil de egreso -->
+<div id="modal-egreso" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEgresoModal()">&times;</span>
+        <h2>Perfil de Egreso</h2>
+        <ul>
+            <li>1. Promueve el desarrollo sustentable en el turismo fomentando el respeto a la cultura y la naturaleza con un compromiso ético.</li>
+            <li>2. Evalúa y aplica planes, programas y proyectos turísticos para el desarrollo integral de las comunidades receptoras.</li>
+            <li>3. Reconoce el fenómeno turístico identificando los indicadores de orden social, para coadyuvar al aumento de la calidad de la oferta turística.</li>
+            <li>4. Preserva la cultura nacional e internacional respetando su identidad.</li>
+            <li>5. Elabora un plan de negocios para la creación de empresas turísticas.</li>
+            <li>6. Valora la riqueza ecológica para la prestación de servicios turísticos.</li>
+            <li>7. Administra recursos humanos, materiales, técnicos y financieros de empresas turísticas.</li>
+            <li>8. Conoce el marco legal, para garantizar el funcionamiento del sistema turístico fortaleciendo la seguridad en su entorno.</li>
+            <li>9. Aplica el uso de las tecnologías de la información y comunicación (TIC’S) para lograr la eficiencia en el desarrollo del sistema turístico.</li>
+            <li>10. Analiza las nuevas tendencias para el desarrollo del sector turístico a nivel global.</li>
+        </ul>
+    </div>
+</div>
+
+
+<!-- Ventana Modal para Ambito laboral -->
+<div id="modal-ambito" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAmbitoModal()">&times;</span>
+        <h2>Ambito Laboral</h2>
+        <ul>
+            <li>1. El licenciado en Turismo puede desempeñarse en: empresas del sector hotelero y de alimentos, en agencias de viaje, corporaciones de promoción del turismo, parques naturales, oficinas gubernamentales de turismo o bien, generar su propia empresa turística.</li>
+            <li>2. Puede desempeñarse en la consultoría de eventos, organización de congresos, promoción de la cultura y el turismo, planificación de proyectos turísticos sustentables, consultoría turística y como agente de viajes.</li>
+        </ul>
+    </div>
+</div>
+
+
+<div id="modal-pdf" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <embed src="../reticulas/Retícula Licenciatura en Turismo.pdf" type="application/pdf" width="100%" height="550px">
+    </div>
+</div>
+
+
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Tecnológico de Estudios Superiores de Jocotitlán</p>
+    </footer>
+
+    <script>
+        // Función para abrir el modal de  reitucula
+        function openModal() {
+            document.getElementById('modal-pdf').style.display = 'flex';
+        }
+    
+        // Función para cerrar el modal de reticula
+        function closeModal() {
+            document.getElementById('modal-pdf').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-pdf');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+
+
+    <script>
+        // Abrir el modal del Objetivo General
+        function openObjectiveModal() {
+            document.getElementById('modal-objective').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Objetivo General
+        function closeObjectiveModal() {
+            document.getElementById('modal-objective').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal-objective');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    
+
+    <script>
+        // Abrir el modal del Perfil de Ingreso
+        function openIngresoModal() {
+            document.getElementById('modal-ingreso').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Perfil de Ingreso
+        function closeIngresoModal() {
+            document.getElementById('modal-ingreso').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const ingresoModal = document.getElementById('modal-ingreso');
+            if (event.target === ingresoModal) {
+                ingresoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+
+    <script>
+        // Abrir el modal del Perfil de Egreso
+        function openEgresoModal() {
+            document.getElementById('modal-egreso').style.display = 'flex';
+        }
+    
+        // Cerrar el modal del Perfil de Egreso
+        function closeEgresoModal() {
+            document.getElementById('modal-egreso').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const egresoModal = document.getElementById('modal-egreso');
+            if (event.target === egresoModal) {
+                egresoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+
+    <script>
+        // Abrir el modal de Ambito Laboral
+        function openAmbitoModal() {
+            document.getElementById('modal-ambito').style.display = 'flex';
+        }
+    
+        // Cerrar el modal de Ambito Laboral
+        function closeAmbitoModal() {
+            document.getElementById('modal-ambito').style.display = 'none';
+        }
+    
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.onclick = function(event) {
+            const ambitoModal = document.getElementById('modal-egreso');
+            if (event.target === ambitoModal) {
+                ambitoModal.style.display = 'none';
+            }
+        };
+    </script>
+    
+    <script>
+                function guardarValor(valor) {
+                  // Guardar el valor en localStorage
+                  localStorage.setItem("miVariable", valor);
+                  //alert(`Valor "${valor}" guardado correctamente.`);
+                }
+    </script>
+
+</body>
+</html>

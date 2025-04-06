@@ -1,0 +1,148 @@
+/* General Styles */
+body {
+    font-family: 'Georgia', serif; /* Estilo elegante */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: white; /* Fondo limpio */
+    color: #333;
+}
+
+/* Header Styles */
+header {
+    background-color: white;
+    padding: 15px 0;
+    position: relative; /* Necesario para posicionar los elementos */
+    border-bottom: 5px solid #0A1164; /* Línea decorativa roja debajo del header */
+}
+
+.logo-header {
+    display: flex;
+    justify-content: space-between; /* Alinear logos a izquierda y derecha */
+    align-items: center;
+    padding: 0 30px; /* Espaciado interno horizontal */
+}
+
+.logo-header img {
+    height: 70px; /* Tamaño ajustado de los logos */
+}
+.logo-left {
+    height: 80px; /* Cambia este valor para ajustar el tamaño */
+}
+.logo-right {
+    height: 80px; /* Cambia este valor para ajustar el tamaño */
+}
+.logo-left {
+    position: absolute;
+    left: 150px; /* Cambia este valor para moverlo horizontalmente */
+    top: 20px;  /* Cambia este valor para moverlo verticalmente */
+}
+.logo-right {
+    position: absolute;
+    right: 60px; /* Cambia este valor para moverlo horizontalmente */
+    top: 20px;   /* Cambia este valor para moverlo verticalmente */
+}
+
+.title-header {
+    text-align: center; /* Centra el texto horizontalmente */
+    color: #0A1164; /* Color del texto */
+    font-size: 2.0em; /* Tamaño del texto, cambia este valor para ajustar */
+    font-weight: bold; /* Hace que el texto sea negrita */
+    margin: -5px 0; /* Controla el espaciado superior e inferior */
+}
+.subtitle-header {
+    text-align: center; /* Centra el texto horizontalmente */
+    color: #000000; /* Cambia este color si quieres otro */
+    font-size: 1.0em; /* Cambia el tamaño del texto */
+    margin: 10px 0 10px 0;
+    font-style: bold; /* Hace que el texto sea cursivo */
+}
+
+
+/* Título adicional */
+.extra-header {
+    text-align: center; /* Centra el contenido */
+    padding: 10px 0; /* Espaciado superior e inferior */
+}
+
+.extra-title {
+    color: #0A1164; /* Color rojo oscuro */
+    font-size: 1.5em; /* Tamaño de la fuente */
+    font-weight: bold; /* Texto en negrita */
+    margin: 10px; /* Sin margen */
+}
+
+.extra-subtitle {
+    color: #000000; /* Color del subtítulo */
+    font-size: 1.2em; /* Tamaño de la fuente */
+    font-style: bold; /* Estilo cursivo */
+    margin: 5px 0; /* Espaciado superior e inferior */
+}
+
+/* Educational Options */
+.educational-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+    gap: 45px; /* Espaciado entre los cuadros */
+    padding: 45px;
+    justify-content: center;
+    align-items: center;
+}
+
+.option {
+    position: relative; /* Para posicionar los logos dentro del cuadro */
+    border: 1px solid #0A1164; /* Bordes en azul */
+    border-radius: 50px; /* Bordes redondeados */
+    padding: 10px;
+    background-color: white;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.option:hover {
+    transform: scale(1.05); /* Efecto de zoom */
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Sombra más marcada */
+}
+
+.option h2 {
+    color: #0A1164; /* Color del título */
+    font-size: 1.4em;
+    margin: 15px 0;
+}
+
+.option p {
+    font-size: 1em;
+    line-height: 1.8;
+    margin-top: 20px;
+    color: #000000; /* Color gris para el texto */
+}
+
+/* Logos de las opciones */
+.option img {
+    position: absolute;
+    top: -25px; /* Posición ajustada del logo */
+    right: -25px;
+    width: 70px; /* Tamaño uniforme */
+    border: 3px solid #0A1164; /* Borde rojo */
+    border-radius: 50%; /* Forma circular */
+    background-color: white;
+    padding: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;/* Fondo rojo oscuro para el pie de página */
+    background-color: #0A1164;/* Color del texto blanco */
+    color: white;/* Centra el texto en el pie de página */
+    padding: 11.3px 0;/* Añade espaciado arriba y abajo */
+    font-size: 0.9em;/* Tamaño de la fuente pequeño */
+    margin-top: 75px;
+}
+
+footer p {
+    margin: 0;
+}
+
+
