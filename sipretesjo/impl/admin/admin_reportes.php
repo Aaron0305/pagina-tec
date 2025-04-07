@@ -60,10 +60,9 @@ if ($result_general) {
         .export-btn {
             margin-bottom: 20px;
             float: right;
-            display: block !important; /* Forzar visibilidad del botón */
+            display: block !important;
         }
         
-        /* Add print-specific styles */
         @media print {
             .no-print {
                 display: none !important;
@@ -76,7 +75,7 @@ if ($result_general) {
     </style>
 </head>
 <body>
-    <!-- NAVBAR ORIGINAL (CONTENIDO SUPERIOR) -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <img src="../imagenes/logo.png" alt="Bootstrap" width="270" height="70">
@@ -102,10 +101,10 @@ if ($result_general) {
         </div>
     </nav>
     
-    <!-- LÍNEA ROJA ORIGINAL -->
+    <!-- LÍNEA ROJA -->
     <div class="h4 pb-0 mb-4 text-danger border-bottom border-danger border-3"></div>
 
-    <!-- CONTENEDORES ORIGINALES -->
+    <!-- CONTENEDORES -->
     <div class="container-fluid">
         <div class="row">
             <!-- Contenedor izquierdo (30%) -->
@@ -115,7 +114,7 @@ if ($result_general) {
                         <i class="fas fa-graduation-cap me-2"></i>Selecciona una carrera
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="showCareersBtn">
-                        <li><a href="admin_reportes.php?idLic=13" class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=13" class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a href="admin_reporte_licenciatura.php?idLic=1" class="dropdown-item career-item" data-career="Electromecanica">Ingenier&iacute;a en Electromecánica</a></li>
                         <li><a href="admin_reporte_licenciatura.php?idLic=4" class="dropdown-item career-item" data-career="Gestion Empresarial">Ingeniería en Gestión Empresarial</a></li>
@@ -144,7 +143,7 @@ if ($result_general) {
                         </button>
                     </div>
                     
-                    <!-- Wrap the content to be printed in a div with id="printSection" -->
+                    <!-- Sección para imprimir -->
                     <div id="printSection">
                         <!-- Gráficas -->
                         <div class="row mb-4">
@@ -155,7 +154,7 @@ if ($result_general) {
                                 <div id="documentationChart" class="chart-container"></div>
                             </div>
                         </div>
-                        <!-- Línea divisoria roja entre gráficas y estadísticas -->
+                        <!-- Línea divisoria roja -->
                         <div class="border-top border-danger border-3 my-4"></div>
                         <!-- Estadísticas -->
                         <div class="row">
@@ -209,7 +208,7 @@ if ($result_general) {
             sin_docs: <?php echo $stats_general['sin_docs']; ?>
         };
         
-        // Función para dibujar gráficas basado en los datos proporcionados
+        // Función para dibujar gráficas
         function drawCharts(stats, title) {
             // Gráfica de aceptación
             const acceptanceData = google.visualization.arrayToDataTable([
@@ -249,58 +248,11 @@ if ($result_general) {
                 drawCharts(generalStats, 'Datos Generales');
             });
             
-            // Manejar selección de carrera
-            $('.career-item').click(function() {
+            // Manejar selección de carrera - navegación normal
+            $('.career-item').click(function(e) {
+                // No hacemos nada especial, dejamos que el navegador navegue normalmente
                 const careerName = $(this).text();
-                const careerId = $(this).data('career');
-                
-                $('#selectedCareerTitle').html(`<i class="fas fa-university me-2"></i>${careerName}`);
-                
-                // Si es "Datos Generales", mostrar esos datos
-                if (careerId === 'General') {
-                    $('#acceptedCount').text(generalStats.aprobados);
-                    $('#rejectedCount').text(generalStats.rechazados);
-                    $('#completeDocsCount').text(generalStats.en_revision);
-                    $('#incompleteDocsCount').text(generalStats.sin_docs);
-                    
-                    google.charts.setOnLoadCallback(function() {
-                        drawCharts(generalStats, careerName);
-                    });
-                    return;
-                }
-                
-                // Para otras carreras, hacer la llamada AJAX
-                $.ajax({
-                    url: window.location.href,
-                    type: 'POST',
-                    data: { 
-                        action: 'getCareerStats',
-                        career: careerId 
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.success) {
-                            const stats = response.data;
-                            
-                            // Actualizar estadísticas en las tarjetas
-                            $('#acceptedCount').text(stats.aprobados);
-                            $('#rejectedCount').text(stats.rechazados);
-                            $('#completeDocsCount').text(stats.en_revision);
-                            $('#incompleteDocsCount').text(stats.sin_docs);
-                            
-                            // Dibujar gráficas
-                            google.charts.setOnLoadCallback(function() {
-                                drawCharts(stats, careerName);
-                            });
-                        } else {
-                            // Mostrar mensaje de error
-                            alert('Error al cargar los datos: ' + (response.message || 'Error desconocido'));
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Error de conexión al servidor: ' + error);
-                    }
-                });
+                console.log("Navegando a: " + careerName);
             });
             
             // Función para exportar a PDF
@@ -314,7 +266,7 @@ if ($result_general) {
                 doc.text('REPORTE DE ESTADÍSTICAS', pageWidth/2, 20, { align: 'center' });
                 doc.setFontSize(14);
                 
-                // Obtener el título actual que está siendo mostrado
+                // Obtener el título actual
                 const currentTitle = $('#selectedCareerTitle').text().trim();
                 doc.text(currentTitle, pageWidth/2, 30, { align: 'center' });
                 
@@ -326,14 +278,14 @@ if ($result_general) {
                 
                 // Crear imagen de la sección a exportar
                 html2canvas(document.getElementById('printSection'), {
-                    scale: 2, // Mejor calidad
+                    scale: 2,
                     backgroundColor: '#ffffff'
                 }).then(function(canvas) {
                     // Obtener la imagen como base64
                     const imgData = canvas.toDataURL('image/png');
                     
-                    // Calcular dimensiones para mantener la proporción
-                    const contentWidth = pageWidth - 40; // Márgenes de 20mm a cada lado
+                    // Calcular dimensiones
+                    const contentWidth = pageWidth - 40;
                     const contentHeight = (canvas.height * contentWidth) / canvas.width;
                     
                     // Agregar la imagen al PDF
@@ -344,7 +296,7 @@ if ($result_general) {
                     doc.setFontSize(10);
                     doc.text('Este reporte contiene información estadística actualizada al ' + dateStr, pageWidth/2, footerY, { align: 'center' });
                     
-                    // Guardar el PDF con el nombre basado en el título actual
+                    // Guardar el PDF
                     const pdfTitle = currentTitle.replace(/[^\w\s]/gi, '').trim();
                     doc.save('Reporte_' + pdfTitle + '_' + dateStr.replace(/\//g, '-') + '.pdf');
                 });

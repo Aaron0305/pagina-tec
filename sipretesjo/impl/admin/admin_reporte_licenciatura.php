@@ -9,7 +9,10 @@ if (!isset($_SESSION['nombre'])) {
 
 // Corregir la línea con error: usar isset para verificar si existe idLic
 $idLic = isset($_GET['idLic']) ? $_GET['idLic'] : 1; // Valor predeterminado: 1 (INGENIERÍA ELECTROMECÁNICA)
-$carrera = "INGENIERÍA ELECTROMECÁNICA";
+$carrera = random_int(1, 13); // Valor aleatorio para la carrera (esto debería ser reemplazado por una lógica real si es necesario)
+// Nuevos parámetros para filtros
+$plantel = isset($_GET['plantel']) ? $_GET['plantel'] : 'todos'; // Valor predeterminado: todos
+$tipoPase = isset($_GET['tipoPase']) ? $_GET['tipoPase'] : 'todos'; // Valor predeterminado: todos
 
 switch($idLic){
     case 1:
@@ -50,18 +53,49 @@ switch($idLic){
         break;
     case 13:
         $carrera = "DATOS GENERALES";
-        break;
+
 }
 
 require_once('../php/conexion.php');
 
-// Consulta para contar cada estado de documentación general (sin filtrar por carrera)
+// CORRECCIÓN: Añadir debug para verificar valores reales en la base de datos
+$debug_query = "SELECT DISTINCT tipo_pase FROM persona WHERE carrera = '$carrera'";
+$debug_result = mysqli_query($mysqli, $debug_query);
+$debug_values = [];
+if ($debug_result) {
+    while ($row = mysqli_fetch_assoc($debug_result)) {
+        $debug_values[] = $row['tipo_pase'];
+    }
+}
+// Comentar o descomentar la siguiente línea para ver los valores reales en la base de datos
+// echo "<pre>Valores tipo_pase en DB: " . print_r($debug_values, true) . "</pre>";
+
+// Construir condición de filtro para plantel
+$condicionPlantel = ($plantel != 'todos') ? " AND plantel = '$plantel'" : "";
+
+// CORRECCIÓN: Mejorar el manejo del filtro tipo_pase
+$condicionTipoPase = "";
+if ($tipoPase != 'todos') {
+    // Convertir el valor del filtro al formato que existe en la base de datos
+    if ($tipoPase == 'examen') {
+        $tipoPaseDB = 'Por examen';
+    } elseif ($tipoPase == 'promedio') {
+        $tipoPaseDB = 'Por promedio';
+    } else {
+        $tipoPaseDB = $tipoPase; // En caso de que se pase otro valor
+    }
+    
+    $condicionTipoPase = " AND tipo_pase = '$tipoPaseDB'";
+}
+
+// Consulta para contar cada estado de documentación general (con los filtros aplicados)
 $query_general = "SELECT 
             SUM(CASE WHEN doc_fotografia = 'Aprobado' THEN 1 ELSE 0 END) as Aprobados,
             SUM(CASE WHEN doc_fotografia = 'Rechazado' THEN 1 ELSE 0 END) as Rechazados,
             SUM(CASE WHEN doc_fotografia = 'en_revision' THEN 1 ELSE 0 END) as en_revision,
             SUM(CASE WHEN doc_fotografia = 'sin_docs' THEN 1 ELSE 0 END) as sin_docs
-        FROM persona WHERE carrera = '$carrera'";
+        FROM persona 
+        WHERE carrera = '$carrera' $condicionPlantel $condicionTipoPase";
 
 $result_general = mysqli_query($mysqli, $query_general);
 $stats_general = null;
@@ -78,14 +112,14 @@ if ($result_general) {
     ];
 }
 
-// Consulta para contar cada estado de documentación para la carrera seleccionada
+// Consulta para contar cada estado de documentación para la carrera seleccionada (con los filtros aplicados)
 $query = "SELECT 
             SUM(CASE WHEN doc_fotografia = 'Aprobado' THEN 1 ELSE 0 END) as Aprobados,
             SUM(CASE WHEN doc_fotografia = 'Rechazado' THEN 1 ELSE 0 END) as Rechazados,
             SUM(CASE WHEN doc_fotografia = 'en_revision' THEN 1 ELSE 0 END) as en_revision,
             SUM(CASE WHEN doc_fotografia = 'sin_docs' THEN 1 ELSE 0 END) as sin_docs
         FROM persona 
-        WHERE carrera = '$carrera'";
+        WHERE carrera = '$carrera' $condicionPlantel $condicionTipoPase";
 
 $result = mysqli_query($mysqli, $query);
 
@@ -108,6 +142,30 @@ if ($result) {
         'success' => false,
         'message' => 'Error de consulta: ' . mysqli_error($mysqli)
     ];
+}
+
+// Nueva consulta para contar estudiantes por tipo de pase
+$query_tipo_pase = "SELECT 
+                    tipo_pase, 
+                    COUNT(*) as cantidad 
+                FROM persona 
+                WHERE carrera = '$carrera' $condicionPlantel 
+                GROUP BY tipo_pase";
+
+$result_tipo_pase = mysqli_query($mysqli, $query_tipo_pase);
+
+// Array para almacenar los resultados por tipo de pase
+$stats_tipo_pase = [
+    'Por examen' => 0,
+    'Por promedio' => 0
+];
+
+if ($result_tipo_pase) {
+    while ($row = mysqli_fetch_assoc($result_tipo_pase)) {
+        if (isset($row['tipo_pase']) && isset($row['cantidad'])) {
+            $stats_tipo_pase[$row['tipo_pase']] = (int)$row['cantidad'];
+        }
+    }
 }
 ?>
 
@@ -139,6 +197,9 @@ if ($result) {
         .export-btn {
             margin-bottom: 20px;
             float: right;
+        }
+        .filter-btn {
+            margin-bottom: 10px;
         }
         /* Estilos para la versión de impresión */
         @media print {
@@ -195,25 +256,48 @@ if ($result) {
         <div class="row">
             <!-- Contenedor izquierdo (30%) -->
             <div class="col-md-4 border-container">
-                <div class="dropdown w-100">
+
+            <!-- NUEVO FILTRO: Plantel -->
+            <div class="dropdown w-100 mb-3">
+                    <button class="btn btn-success dropdown-toggle w-100 filter-btn" type="button" id="showPlantelBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-building me-2"></i>Plantel: <?php echo ($plantel == 'todos') ? 'Todos' : ucfirst($plantel); ?>
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="showPlantelBtn">
+                        <li><a href="admin_reporte_licenciatura.php?idLic=<?php echo $idLic; ?>&plantel=todos&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item">Todos</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=<?php echo $idLic; ?>&plantel=jocotitlan&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item">Jocotitlan</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=<?php echo $idLic; ?>&plantel=aculco&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item">Aculco</a></li>
+                    </ul>
+                </div>
+                <!-- Filtro de Carrera -->
+                <div class="dropdown w-100 mb-3">
                     <button class="btn btn-primary dropdown-toggle w-100" type="button" id="showCareersBtn" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-graduation-cap me-2"></i>Selecciona una carrera
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="showCareersBtn">
-                        <li><a href="admin_reportes.php?idLic=13" class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=13&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>"class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=1" class="dropdown-item career-item" data-career="Electromecanica">Ingeniería en Electromecánica</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=4" class="dropdown-item career-item" data-career="Gestion Empresarial">Ingeniería en Gestión Empresarial</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=3" class="dropdown-item career-item" data-career="Industrial">Ingeniería Industrial</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=5" class="dropdown-item career-item" data-career="Quimica">Ingeniería Química</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=6" class="dropdown-item career-item" data-career="Sistemas">Ingeniería en Sistemas Computacionales</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=12" class="dropdown-item career-item" data-career="Materiales">Ingeniería en Materiales</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=7" class="dropdown-item career-item" data-career="Arquitectura">Licenciatura en Arquitectura</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=8" class="dropdown-item career-item" data-career="Animacion">Ingeniería en Animación Digital y Efectos Visuales</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=9" class="dropdown-item career-item" data-career="Mecatronica">Ingeniería en Mecatrónica</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=10" class="dropdown-item career-item" data-career="Turismo">Ingeniería en Turismo</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=11" class="dropdown-item career-item" data-career="Contador">Licenciatura en Contador Público</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=2" class="dropdown-item career-item" data-career="Logistica">Ingeniería en Logística</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=1&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Electromecanica">Ingeniería en Electromecánica</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=4&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Gestion Empresarial">Ingeniería en Gestión Empresarial</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=3&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Industrial">Ingeniería Industrial</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=5&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Quimica">Ingeniería Química</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=6&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Sistemas">Ingeniería en Sistemas Computacionales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=12&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Materiales">Ingeniería en Materiales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=7&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Arquitectura">Licenciatura en Arquitectura</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=8&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Animacion">Ingeniería en Animación Digital y Efectos Visuales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=9&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Mecatronica">Ingeniería en Mecatrónica</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=10&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Turismo">Ingeniería en Turismo</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=11&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Contador">Licenciatura en Contador Público</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=2&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Logistica">Ingeniería en Logística</a></li>
+                    </ul>
+                </div>
+                
+                <!-- NUEVO FILTRO: Tipo Pase -->
+                <div class="dropdown w-100">
+                    
+                    <ul class="dropdown-menu w-100" aria-labelledby="showTipoPaseBtn">
+                        <li><a href="admin_reporte_licenciatura.php?idLic=<?php echo $idLic; ?>&plantel=<?php echo $plantel; ?>&tipoPase=todos" class="dropdown-item">Todos</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=<?php echo $idLic; ?>&plantel=<?php echo $plantel; ?>&tipoPase=examen" class="dropdown-item">Por Examen</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=<?php echo $idLic; ?>&plantel=<?php echo $plantel; ?>&tipoPase=promedio" class="dropdown-item">Por Promedio</a></li>
                     </ul>
                 </div>
             </div>
@@ -229,6 +313,18 @@ if ($result) {
                         </button>
                     </div>
                     
+                    <!-- Información de filtros activos -->
+                    <div class="alert alert-info mb-4">
+                        <strong>Filtros activos:</strong> 
+                        Plantel: <?php echo ($plantel == 'todos') ? 'Todos' : ucfirst($plantel); ?>, 
+                        Tipo de Pase: <?php echo ($tipoPase == 'todos') ? 'Todos' : ($tipoPase == 'examen' ? 'Por Examen' : 'Por Promedio'); ?>
+                        
+                        <?php if (!empty($debug_values)): ?>
+                        <!-- Comentar o descomentar para depuración -->
+                        <!-- <br><small>(Valores en BD: <?php echo implode(', ', $debug_values); ?>)</small> -->
+                        <?php endif; ?>
+                    </div>
+                    
                     <!-- Sección que se imprimirá en el PDF -->
                     <div id="printSection">
                         <!-- Gráficas -->
@@ -240,8 +336,17 @@ if ($result) {
                                 <div id="documentationChart" class="chart-container"></div>
                             </div>
                         </div>
+                        
+                        <!-- NUEVA GRÁFICA: Distribución por tipo de pase -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div id="tipoPaseChart" class="chart-container"></div>
+                            </div>
+                        </div>
+                        
                         <!-- Línea divisoria roja entre gráficas y estadísticas -->
                         <div class="border-top border-danger border-3 my-4"></div>
+                        
                         <!-- Estadísticas -->
                         <div class="row">
                             <div class="col">
@@ -272,6 +377,27 @@ if ($result) {
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!-- NUEVA SECCIÓN: Estadísticas por tipo de pase -->
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <h4 class="mb-3"><i class="fas fa-id-card me-2"></i>Distribución por Tipo de Pase</h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="stats-card">
+                                                    <h5 class="text-info"><i class="fas fa-file-alt me-2"></i>Por Examen</h5>
+                                                    <p class="h4"><?php echo $stats_tipo_pase['Por examen']; ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="stats-card">
+                                                    <h5 class="text-success"><i class="fas fa-graduation-cap me-2"></i>Por Promedio</h5>
+                                                    <p class="h4"><?php echo $stats_tipo_pase['Por promedio']; ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -280,7 +406,8 @@ if ($result) {
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
+     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Carga de Google Charts
@@ -294,11 +421,21 @@ if ($result) {
             sin_docs: <?php echo $stats_general['sin_docs']; ?>
         };
         
+        // Datos para la gráfica de tipo de pase
+        const tipoPaseStats = {
+            por_examen: <?php echo $stats_tipo_pase['Por examen']; ?>,
+            por_promedio: <?php echo $stats_tipo_pase['Por promedio']; ?>
+        };
+        
         // Variable para guardar el título de la carrera actual
         let currentCareerTitle = "<?php echo $carrera; ?>";
         
+        // Obtener información de filtros para incluir en el PDF
+        const plantelActual = "<?php echo ($plantel == 'todos') ? 'Todos' : ucfirst($plantel); ?>";
+        const tipoPaseActual = "<?php echo ($tipoPase == 'todos') ? 'Todos' : ($tipoPase == 'examen' ? 'Por Examen' : 'Por Promedio'); ?>";
+        
         // Función para dibujar gráficas basado en los datos proporcionados
-        function drawCharts(stats, title) {
+        function drawCharts(stats, tipoPaseData, title) {
             // Actualizar el título de carrera actual
             currentCareerTitle = title;
             document.getElementById('selectedCareerTitle').innerHTML = `<i class="fas fa-chart-pie me-2"></i>${title}`;
@@ -333,92 +470,79 @@ if ($result) {
                     colors: ['#17a2b8', '#ffc107'],
                     pieHole: 0.4
                 });
+                
+            // Nueva gráfica: Distribución por tipo de pase
+            const tipoPaseChartData = google.visualization.arrayToDataTable([
+                ['Tipo de Pase', 'Cantidad'],
+                ['Por Examen', tipoPaseData.por_examen],
+                ['Por Promedio', tipoPaseData.por_promedio]
+            ]);
+            
+            new google.visualization.PieChart(document.getElementById('tipoPaseChart'))
+                .draw(tipoPaseChartData, {
+                    title: 'Distribución por Tipo de Pase',
+                    colors: ['#17a2b8', '#28a745'],
+                    pieHole: 0.4
+                });
         }
         
         $(document).ready(function() {
             // Dibujar gráficas generales cuando la página cargue
             google.charts.setOnLoadCallback(function() {
-                drawCharts(generalStats, '<?php echo $carrera; ?>');
+                drawCharts(generalStats, tipoPaseStats, '<?php echo $carrera; ?>');
             });
             
             // Inicialización de jsPDF
             window.jsPDF = window.jspdf.jsPDF;
             
             // Función para exportar a PDF
-// Función para exportar a PDF
-    $('#exportPdfBtn').click(function() {
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        
-        // Agregar solo el título 
-        doc.setFontSize(16);
-        doc.text('Reporte de Estadísticas', pageWidth/2, 20, { align: 'center' });
-        doc.setFontSize(14);
-        doc.text(currentCareerTitle, pageWidth/2, 30, { align: 'center' });
-    
-        // Fecha actual (para usar solo en el pie de página)
-        const today = new Date();
-        const dateStr = today.toLocaleDateString('es-MX');
-    
-    // Capturar logo del TecNM primero
-        html2canvas(document.querySelector('.navbar img'), {
-            scale: 2,
-            backgroundColor: null
-        }).then(function(logoCanvas) {
-            // Obtener la imagen del logo como base64
-            const logoData = logoCanvas.toDataURL('image/png');
-        
-            // Añadir el logo en la esquina superior izquierda
-            const logoWidth = 40;
-            const logoHeight = (logoCanvas.height * logoWidth) / logoCanvas.width;
-            doc.addImage(logoData, 'PNG', 10, 10, logoWidth, logoHeight);
-        
-            // Agregar línea roja fina como en la imagen de referencia
-            const lineY = 45;
-                doc.setDrawColor(220, 53, 69); // Color rojo (bootstrap danger)
-                doc.setLineWidth(0.3); // Línea más fina
-                doc.line(19, lineY, pageWidth - 19, lineY); // Línea de extremo a extremo
-        
-            // Crear imagen de la sección principal a exportar
-            html2canvas(document.getElementById('printSection'), {
-                scale: 2, // Mejor calidad
-                backgroundColor: '#ffffff'
-            }).then(function(canvas) {
-                // Obtener la imagen como base64
-                const imgData = canvas.toDataURL('image/png');
+            $('#exportPdfBtn').click(function() {
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
                 
-                // Calcular dimensiones para mantener la proporción
-                const contentWidth = pageWidth - 40; // Márgenes de 20mm a cada lado
-                const contentHeight = (canvas.height * contentWidth) / canvas.width;
+                // Agregar solo el título 
+                doc.setFontSize(16);
+                doc.text('Reporte de Estadísticas', pageWidth/2, 20, { align: 'center' });
+                doc.setFontSize(14);
+                doc.text(currentCareerTitle, pageWidth/2, 30, { align: 'center' });
                 
-                // Agregar la imagen al PDF (ajustar posición Y para dejar espacio al logo)
-                doc.addImage(imgData, 'PNG', 20, 55, contentWidth, contentHeight);
-                
-                // Agregar pie de página con la fecha
-                const footerY = contentHeight + 65;
-                doc.setFontSize(10);
-                doc.text('Este reporte contiene información estadística actualizada al ' + dateStr, pageWidth/2, footerY, { align: 'center' });
-            
-                // Guardar el PDF
-                doc.save('Reporte_' + currentCareerTitle.replace(/\s/g, '_') + '_' + dateStr.replace(/\//g, '-') + '.pdf');
-            });
-        });
-    });
-            
-            // Manejar selección de carrera con navegación normal sin AJAX
-            $('.career-item').click(function(e) {
-                // No usamos e.preventDefault() para permitir la navegación normal del navegador
-                // Esto evita problemas de formato JSON y permite cargas de página completas
-                
-                // Si es necesario hacer algo antes de la navegación, se puede hacer aquí
-                const careerName = $(this).text();
-                console.log("Navegando a: " + careerName);
-                
-                // Importante: dejamos que el navegador haga la navegación normal
-                // No hacemos AJAX aquí, lo que evita el error de JSON
+                // Agregar información de filtros
+                doc.setFontSize(12);
+                doc.text(`Plantel: ${plantelActual} | Tipo de Pase: ${tipoPaseActual}`, pageWidth/2, 40, { align: 'center' });
+                // Capturar las gráficas como imágenes
+                html2canvas(document.getElementById('acceptanceChart')).then(function(canvas) {
+                    const imgData = canvas.toDataURL('image/png');
+                    doc.addImage(imgData, 'PNG', 10, 50, pageWidth - 20, 70);
+                    
+                    html2canvas(document.getElementById('documentationChart')).then(function(canvas) {
+                        const imgData = canvas.toDataURL('image/png');
+                        doc.addImage(imgData, 'PNG', 10, 130, pageWidth - 20, 70);
+                        
+                        html2canvas(document.getElementById('tipoPaseChart')).then(function(canvas) {
+                            const imgData = canvas.toDataURL('image/png');
+                            doc.addImage(imgData, 'PNG', 10, 210, pageWidth - 20, 70);
+                            
+                            // Agregar estadísticas en formato texto
+                            doc.addPage();
+                            doc.setFontSize(14);
+                            doc.text('Datos numéricos:', 10, 20);
+                            doc.setFontSize(12);
+                            doc.text(`Aprobados: ${generalStats.aprobados}`, 20, 35);
+                            doc.text(`Rechazados: ${generalStats.rechazados}`, 20, 45);
+                            doc.text(`En revisión de documentos: ${generalStats.en_revision}`, 20, 55);
+                            doc.text(`Sin documentos: ${generalStats.sin_docs}`, 20, 65);
+                            doc.text(`Por examen: ${tipoPaseStats.por_examen}`, 20, 75);
+                            doc.text(`Por promedio: ${tipoPaseStats.por_promedio}`, 20, 85);
+                            
+                            // Guardar el PDF
+                            doc.save(`Estadisticas_${currentCareerTitle.replace(/\s+/g, '_')}.pdf`);
+                        });
+                    });
+                });
             });
         });
     </script>
-</body>
-</html>
+    </body>
+    </html>
+
