@@ -9,13 +9,17 @@ if (!isset($_SESSION['nombre'])) {
 
 require_once('../php/conexion.php');
 
-// Consulta para contar cada estado de documentación general (sin filtrar por carrera)
+// Agregar el filtro por plantel
+$plantel = isset($_GET['plantel']) ? $_GET['plantel'] : 'todos'; // Valor predeterminado: todos
+$condicionPlantel = ($plantel != 'todos') ? " WHERE plantel = '$plantel'" : "";
+
+// Consulta para contar cada estado de documentación general con filtro de plantel
 $query_general = "SELECT 
             SUM(CASE WHEN doc_fotografia = 'Aprobado' THEN 1 ELSE 0 END) as Aprobados,
             SUM(CASE WHEN doc_fotografia = 'Rechazado' THEN 1 ELSE 0 END) as Rechazados,
             SUM(CASE WHEN doc_fotografia = 'en_revision' THEN 1 ELSE 0 END) as en_revision,
             SUM(CASE WHEN doc_fotografia = 'sin_docs' THEN 1 ELSE 0 END) as sin_docs
-        FROM persona";
+        FROM persona" . $condicionPlantel;
 
 $result_general = mysqli_query($mysqli, $query_general);
 $stats_general = null;
@@ -32,6 +36,33 @@ if ($result_general) {
     ];
 }
 
+// Obtener datos de distribución por plantel (para mostrar en una nueva gráfica)
+$query_planteles = "SELECT 
+                plantel,
+                COUNT(*) as total_alumnos
+            FROM persona
+            GROUP BY plantel";
+
+$result_planteles = mysqli_query($mysqli, $query_planteles);
+$stats_planteles = [
+    'jocotitlán' => 0,
+    'aculco' => 0
+];
+
+if ($result_planteles) {
+    while ($row = mysqli_fetch_assoc($result_planteles)) {
+        if (isset($row['plantel']) && isset($row['total_alumnos'])) {
+            $plantel_nombre = strtolower($row['plantel']);
+            if (array_key_exists($plantel_nombre, $stats_planteles)) {
+                $stats_planteles[$plantel_nombre] = (int)$row['total_alumnos'];
+            }
+        }
+    }
+}
+
+// Determinar título según el plantel seleccionado
+$plantelTitulo = ($plantel == 'todos') ? 'Datos Generales - Todos los planteles' : 'Datos Generales - Plantel ' . ucfirst($plantel);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -47,7 +78,7 @@ if ($result_general) {
     <style>
         .career-list { max-height: 400px; overflow-y: auto; }
         .career-item:hover { background-color: #f8f9fa; cursor: pointer; }
-        .chart-container { height: 300px; margin-bottom: 20px; }
+        .chart-container { height: 300px; margin-bottom: 20px; width: 100%;}
         .border-container { border: 2px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
         .stats-card { border-left: 4px solid #0d6efd; padding: 10px; margin-bottom: 10px; }
         .stats-general-section { 
@@ -61,6 +92,9 @@ if ($result_general) {
             margin-bottom: 20px;
             float: right;
             display: block !important;
+        }
+        .filter-btn {
+            margin-bottom: 10px;
         }
         
         @media print {
@@ -109,25 +143,38 @@ if ($result_general) {
         <div class="row">
             <!-- Contenedor izquierdo (30%) -->
             <div class="col-md-4 border-container">
+                <!-- Agregar filtro de plantel -->
+                <div class="dropdown w-100 mb-3">
+                    <button class="btn btn-success dropdown-toggle w-100 filter-btn" type="button" id="showPlantelBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-building me-2"></i>Plantel: <?php echo ($plantel == 'todos') ? 'Todos' : ucfirst($plantel); ?>
+                    </button>
+                    <ul class="dropdown-menu w-100" aria-labelledby="showPlantelBtn">
+                        <li><a href="admin_reporte_licenciatura.php?plantel=todos" class="dropdown-item">Todos</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?plantel=jocotitlan" class="dropdown-item">Jocotitlán</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?plantel=aculco" class="dropdown-item">Aculco</a></li>
+                    </ul>
+                </div>
+
                 <div class="dropdown w-100">
                     <button class="btn btn-primary dropdown-toggle w-100" type="button" id="showCareersBtn" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-graduation-cap me-2"></i>Selecciona una carrera
                     </button>
                     <ul class="dropdown-menu w-100" aria-labelledby="showCareersBtn">
-                        <li><a href="admin_reporte_licenciatura.php?idLic=13" class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=13&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=1" class="dropdown-item career-item" data-career="Electromecanica">Ingenier&iacute;a en Electromecánica</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=4" class="dropdown-item career-item" data-career="Gestion Empresarial">Ingeniería en Gestión Empresarial</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=3" class="dropdown-item career-item" data-career="Industrial">Ingeniería Industrial</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=5" class="dropdown-item career-item" data-career="Quimica">Ingeniería Química</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=6" class="dropdown-item career-item" data-career="Sistemas">Ingeniería en Sistemas Computacionales</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=12" class="dropdown-item career-item" data-career="Materiales">Ingeniería en Materiales</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=7" class="dropdown-item career-item" data-career="Arquitectura">Licenciatura en Arquitectura</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=8" class="dropdown-item career-item" data-career="Animacion">Ingeniería en Animación Digital y Efectos Visuales</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=9" class="dropdown-item career-item" data-career="Mecatronica">Ingeniería en Mecatrónica</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=10" class="dropdown-item career-item" data-career="Turismo">Ingeniería en Turismo</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=11" class="dropdown-item career-item" data-career="Contador">Licenciatura en Contador Público</a></li>
-                        <li><a href="admin_reporte_licenciatura.php?idLic=2" class="dropdown-item career-item" data-career="Logistica">Ingeniería en Logística</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=1&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Electromecanica">Ingenier&iacute;a en Electromecánica</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=4&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Gestion Empresarial">Ingeniería en Gestión Empresarial</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=3&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Industrial">Ingeniería Industrial</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=5&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Quimica">Ingeniería Química</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=6&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Sistemas">Ingeniería en Sistemas Computacionales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=12&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Materiales">Ingeniería en Materiales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=7&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Arquitectura">Licenciatura en Arquitectura</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=8&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Animacion">Ingeniería en Animación Digital y Efectos Visuales</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=9&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Mecatronica">Ingeniería en Mecatrónica</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=10&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Turismo">Ingeniería en Turismo</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=11&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Contador">Licenciatura en Contador Público</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=2&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="Logistica">Ingeniería en Logística</a></li>
+                        <li><a href="admin_reporte_licenciatura.php?idLic=14&plantel=<?php echo $plantel; ?>" class="dropdown-item career-item" data-career="INGENIERÍA INDUSTRIAL (a distancia)">INGENIERÍA INDUSTRIAL (a distancia)</a></li>
                     </ul>
                 </div>
             </div>
@@ -136,24 +183,35 @@ if ($result_general) {
             <div class="col-md-8 border-container">
                 <div id="chartsContainer">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h3 id="selectedCareerTitle" class="mb-0 text-center flex-grow-1"><i class="fas fa-chart-pie me-2"></i>Datos Generales</h3>
+                        <h3 id="selectedCareerTitle" class="mb-0 text-center flex-grow-1"><i class="fas fa-chart-pie me-2"></i><?php echo $plantelTitulo; ?></h3>
                         <!-- Botón para exportar a PDF -->
                         <button id="exportPdfBtn" class="btn btn-success export-btn no-print">
                             <i class="fas fa-file-pdf me-2"></i>Exportar a PDF
                         </button>
                     </div>
                     
+                    <!-- Información de filtro aplicado -->
+                    <?php if ($plantel != 'todos'): ?>
+                    <div class="alert alert-info mb-4">
+                        <strong>Filtro aplicado:</strong> Plantel: <?php echo ucfirst($plantel); ?>
+                    </div>
+                    <?php endif; ?>
+                    
                     <!-- Sección para imprimir -->
                     <div id="printSection">
                         <!-- Gráficas -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
                                 <div id="acceptanceChart" class="chart-container"></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div id="documentationChart" class="chart-container"></div>
                             </div>
+                            <div class="col-md-4">
+                                <div id="plantelDistributionChart" class="chart-container"></div>
+                            </div>
                         </div>
+                        
                         <!-- Línea divisoria roja -->
                         <div class="border-top border-danger border-3 my-4"></div>
                         <!-- Estadísticas -->
@@ -186,6 +244,29 @@ if ($result_general) {
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <?php if ($plantel == 'todos'): ?>
+                                <!-- Estadísticas por plantel (solo cuando el filtro es 'todos') -->
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <h4 class="mb-3"><i class="fas fa-building me-2"></i>Distribución por Plantel</h4>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="stats-card">
+                                                    <h5 class="text-primary"><i class="fas fa-map-marker-alt me-2"></i>Jocotitlán</h5>
+                                                    <p class="h4" id="jocotitlanCount"><?php echo $stats_planteles['jocotitlán']; ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="stats-card">
+                                                    <h5 class="text-success"><i class="fas fa-map-marker-alt me-2"></i>Aculco</h5>
+                                                    <p class="h4" id="aculcoCount"><?php echo $stats_planteles['aculco']; ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -208,35 +289,109 @@ if ($result_general) {
             sin_docs: <?php echo $stats_general['sin_docs']; ?>
         };
         
+        // Datos para la distribución por plantel
+        const plantelStats = {
+            jocotitlan: <?php echo $stats_planteles['jocotitlán']; ?>,
+            aculco: <?php echo $stats_planteles['aculco']; ?>
+        };
+        
+        // Plantel actual seleccionado
+        const plantelActual = "<?php echo ($plantel == 'todos') ? 'Todos los planteles' : 'Plantel ' . ucfirst($plantel); ?>";
+        const esPlantelFiltrado = "<?php echo ($plantel != 'todos') ? 'true' : 'false'; ?>";
+        
         // Función para dibujar gráficas
-        function drawCharts(stats, title) {
+        function drawCharts() {
             // Gráfica de aceptación
             const acceptanceData = google.visualization.arrayToDataTable([
                 ['Estado', 'Cantidad'],
-                ['Aceptados', stats.aprobados],
-                ['Rechazados', stats.rechazados]
+                ['Aceptados', generalStats.aprobados],
+                ['Rechazados', generalStats.rechazados]
             ]);
             
+            const acceptanceOptions = {
+                title: 'Índice de Aceptación',
+                colors: ['#28a745', '#dc3545'],
+                pieHole: 0.4,
+                chartArea: {width: '90%', height: '80%'},
+                legend: {position: 'bottom'},
+                fontSize: 12,
+                is3D: false,
+                tooltip: {showColorCode: true},
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                }
+            };
+            
             new google.visualization.PieChart(document.getElementById('acceptanceChart'))
-                .draw(acceptanceData, {
-                    title: 'Índice de Aceptación',
-                    colors: ['#28a745', '#dc3545'],
-                    pieHole: 0.4
-                });
+                .draw(acceptanceData, acceptanceOptions);
             
             // Gráfica de documentación
             const docsData = google.visualization.arrayToDataTable([
                 ['Documentación', 'Cantidad'],
-                ['En Revisión', stats.en_revision],
-                ['Sin Documentos', stats.sin_docs]
+                ['En Revisión', generalStats.en_revision],
+                ['Sin Documentos', generalStats.sin_docs]
             ]);
             
+            const docsOptions = {
+                title: 'Estado de Documentación',
+                colors: ['#17a2b8', '#ffc107'],
+                pieHole: 0.4,
+                chartArea: {width: '90%', height: '80%'},
+                legend: {position: 'bottom'},
+                fontSize: 12,
+                is3D: false,
+                tooltip: {showColorCode: true},
+                animation: {
+                    startup: true,
+                    duration: 1000,
+                    easing: 'out'
+                }
+            };
+            
             new google.visualization.PieChart(document.getElementById('documentationChart'))
-                .draw(docsData, {
-                    title: 'Estado de Documentación',
-                    colors: ['#17a2b8', '#ffc107'],
-                    pieHole: 0.4
-                });
+                .draw(docsData, docsOptions);
+                
+            // Gráfica de distribución por plantel 
+            // Para todos los planteles mostramos el gráfico, para un plantel específico mostramos mensaje
+            if (esPlantelFiltrado === 'false') {
+                // Solo dibujamos cuando hay datos disponibles
+                if (plantelStats.jocotitlan > 0 || plantelStats.aculco > 0) {
+                    const plantelData = google.visualization.arrayToDataTable([
+                        ['Plantel', 'Cantidad'],
+                        ['Jocotitlán', plantelStats.jocotitlan],
+                        ['Aculco', plantelStats.aculco]
+                    ]);
+                    
+                    const plantelOptions = {
+                        title: 'Distribución de Alumnos por Plantel',
+                        colors: ['#007bff', '#28a745'],
+                        pieHole: 0.4,
+                        chartArea: {width: '90%', height: '80%'},
+                        legend: {position: 'bottom'},
+                        fontSize: 12,
+                        is3D: false,
+                        tooltip: {showColorCode: true},
+                        animation: {
+                            startup: true,
+                            duration: 1000,
+                            easing: 'out'
+                        }
+                    };
+                    
+                    new google.visualization.PieChart(document.getElementById('plantelDistributionChart'))
+                        .draw(plantelData, plantelOptions);
+                } else {
+                    // Si no hay datos disponibles
+                    document.getElementById('plantelDistributionChart').innerHTML = 
+                        '<div class="alert alert-warning text-center">No hay datos disponibles para mostrar</div>';
+                }
+            } else {
+                // Si está filtrado por un plantel específico
+                document.getElementById('plantelDistributionChart').innerHTML = 
+                    '<div class="alert alert-info text-center">Distribución no disponible al filtrar por plantel específico</div>';
+            }
         }
         
         $(document).ready(function() {
@@ -244,16 +399,7 @@ if ($result_general) {
             window.jsPDF = window.jspdf.jsPDF;
             
             // Dibujar gráficas generales cuando la página cargue
-            google.charts.setOnLoadCallback(function() {
-                drawCharts(generalStats, 'Datos Generales');
-            });
-            
-            // Manejar selección de carrera - navegación normal
-            $('.career-item').click(function(e) {
-                // No hacemos nada especial, dejamos que el navegador navegue normalmente
-                const careerName = $(this).text();
-                console.log("Navegando a: " + careerName);
-            });
+            google.charts.setOnLoadCallback(drawCharts);
             
             // Función para exportar a PDF
             $('#exportPdfBtn').click(function() {
@@ -266,7 +412,7 @@ if ($result_general) {
                 doc.text('REPORTE DE ESTADÍSTICAS', pageWidth/2, 20, { align: 'center' });
                 doc.setFontSize(14);
                 
-                // Obtener el título actual
+                // Obtener el título actual con plantel incluido
                 const currentTitle = $('#selectedCareerTitle').text().trim();
                 doc.text(currentTitle, pageWidth/2, 30, { align: 'center' });
                 
