@@ -284,6 +284,7 @@ if ($result_tipo_pase) {
                             <i class="fas fa-graduation-cap me-2"></i>Selecciona una carrera
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="showCareersBtn">
+                            <?php if($plantel != 'aculco'): ?>
                             <li><a href="admin_reporte_licenciatura.php?idLic=13&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>"class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a href="admin_reporte_licenciatura.php?idLic=1&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Electromecanica">Ingeniería en Electromecánica</a></li>
@@ -300,6 +301,15 @@ if ($result_tipo_pase) {
                             <li><a href="admin_reporte_licenciatura.php?idLic=2&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Logistica">Ingeniería en Logística</a></li>
                             <li><a href="admin_reporte_licenciatura.php?idLic=14&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="INGENIERÍA INDUSTRIAL (a distancia)">INGENIERÍA INDUSTRIAL (a distancia)</a></li>
                             <li><a href="admin_reporte_licenciatura.php?idLic=15&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="INGENIERÍA INDUSTRIAL NO ESCOLARIZADA">INGENIERÍA INDUSTRIAL NO ESCOLARIZADA</a></li>
+                            <?php endif; ?>
+                            
+                            <?php if($plantel == 'aculco'): ?>
+                            <li><a href="admin_reporte_licenciatura.php?idLic=13&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>"class="dropdown-item career-item" data-career="General">Datos Generales</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="admin_reporte_licenciatura.php?idLic=3&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Industrial">Ingeniería Industrial</a></li>
+                            <li><a href="admin_reporte_licenciatura.php?idLic=10&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Turismo">Ingeniería en Turismo</a></li>
+                            <li><a href="admin_reporte_licenciatura.php?idLic=11&plantel=<?php echo $plantel; ?>&tipoPase=<?php echo $tipoPase; ?>" class="dropdown-item career-item" data-career="Contador">Licenciatura en Contador Público</a></li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                     <!-- Línea divisoria -->

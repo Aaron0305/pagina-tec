@@ -78,7 +78,16 @@ $plantelTitulo = ($plantel == 'todos') ? 'Datos Generales - Todos los planteles'
     <style>
         .career-list { max-height: 400px; overflow-y: auto; }
         .career-item:hover { background-color: #f8f9fa; cursor: pointer; }
-        .chart-container { height: 300px; margin-bottom: 20px; width: 100%;}
+        .chart-container { 
+            height: 300px; 
+            margin-bottom: 20px; 
+            width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
         .border-container { border: 2px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
         .stats-card { border-left: 4px solid #0d6efd; padding: 10px; margin-bottom: 10px; }
         .stats-general-section { 
@@ -312,10 +321,11 @@ $plantelTitulo = ($plantel == 'todos') ? 'Datos Generales - Todos los planteles'
                 title: 'Índice de Aceptación',
                 colors: ['#28a745', '#dc3545'],
                 pieHole: 0.4,
-                chartArea: {width: '90%', height: '80%'},
-                legend: {position: 'bottom'},
+                chartArea: {width: '85%', height: '75%'},
+                legend: {position: 'bottom', alignment: 'center'},
                 fontSize: 12,
                 is3D: false,
+                backgroundColor: 'transparent',
                 tooltip: {showColorCode: true},
                 animation: {
                     startup: true,
@@ -338,10 +348,11 @@ $plantelTitulo = ($plantel == 'todos') ? 'Datos Generales - Todos los planteles'
                 title: 'Estado de Documentación',
                 colors: ['#17a2b8', '#ffc107'],
                 pieHole: 0.4,
-                chartArea: {width: '90%', height: '80%'},
-                legend: {position: 'bottom'},
+                chartArea: {width: '85%', height: '75%'},
+                legend: {position: 'bottom', alignment: 'center'},
                 fontSize: 12,
                 is3D: false,
+                backgroundColor: 'transparent',
                 tooltip: {showColorCode: true},
                 animation: {
                     startup: true,
@@ -368,20 +379,22 @@ $plantelTitulo = ($plantel == 'todos') ? 'Datos Generales - Todos los planteles'
                         title: 'Distribución de Alumnos por Plantel',
                         colors: ['#007bff', '#28a745'],
                         pieHole: 0.4,
-                        chartArea: {width: '90%', height: '80%'},
-                        legend: {position: 'bottom'},
+                        chartArea: {width: '85%', height: '75%'},
+                        legend: {position: 'bottom', alignment: 'center'},
                         fontSize: 12,
-                        is3D: false,
-                        tooltip: {showColorCode: true},
-                        animation: {
-                            startup: true,
-                            duration: 1000,
-                            easing: 'out'
+                        backgroundColor: 'transparent',
+                        pieSliceText: 'value',
+                        slices: {
+                            0: { color: '#007bff' },
+                            1: { color: '#28a745' }
+                        },
+                        tooltip: {
+                            text: 'value'
                         }
                     };
                     
-                    new google.visualization.PieChart(document.getElementById('plantelDistributionChart'))
-                        .draw(plantelData, plantelOptions);
+                    const plantelChart = new google.visualization.PieChart(document.getElementById('plantelDistributionChart'));
+                    plantelChart.draw(plantelData, plantelOptions);
                 } else {
                     // Si no hay datos disponibles
                     document.getElementById('plantelDistributionChart').innerHTML = 
